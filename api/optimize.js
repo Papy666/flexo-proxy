@@ -1,18 +1,3 @@
-export default async function handler(req, res) {
-  setCors(res);
-
-  if (req.method === "OPTIONS") {
-    res.status(204).end();
-    return;
-  }
-
-  if (req.method !== "POST") {
-    res.status(405).json({ error: "POST only" });
-    return;
-  }
-
-  // suite...
-}
 import OpenAI from "openai";
 
 /* ---------------------------------- */
@@ -226,6 +211,13 @@ function buildUserPrompt({ text, tone, lang }) {
 /* ---------------------------------- */
 
 export default async function handler(req, res) {
+  setCors(res);
+
+  if (req.method === "OPTIONS") {
+    res.status(204).end();
+    return;
+  }
+
   if (req.method !== "POST") {
     res.status(405).json({ error: "POST only" });
     return;
