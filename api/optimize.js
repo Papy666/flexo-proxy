@@ -135,25 +135,32 @@ function buildToneInstruction(tone = "neutral") {
   switch (tone) {
     case "professional":
       return [
-        "Make the text more professional, clear, credible, and polished.",
-        "Keep it natural and human.",
-        "Do not make it pompous, legalistic, robotic, or overly corporate."
+        "Rewrite as a polished professional message suitable for email or business communication.",
+        "Improve structure, clarity, politeness, credibility, and readability.",
+        "You may slightly rephrase sentences to make them smoother and more professional.",
+        "Do not change the meaning, facts, intent, level of commitment, numbers, names, dates, prices, technical terms, or constraints.",
+        "Do not invent context, promises, urgency, benefits, or missing details.",
+        "Keep the message concise and natural."
       ].join(" ");
 
     case "conversion":
       return [
-        "Make the text clearer, more convincing, and more action-oriented.",
-        "Improve the perceived value and clarity of the request or offer.",
-        "Do not invent facts, benefits, guarantees, urgency, discounts, or promises.",
-        "Do not manipulate dishonestly."
+        "Rewrite to make the text clearer, more persuasive, and more conversion-oriented.",
+        "Improve the hook, perceived value, clarity of the offer/request, and call-to-action when appropriate.",
+        "You may rephrase more actively than in neutral or professional mode.",
+        "Do not invent facts, guarantees, urgency, discounts, scarcity, testimonials, results, benefits, or promises.",
+        "Do not exaggerate beyond the original meaning.",
+        "Preserve the original intent and factual content exactly."
       ].join(" ");
 
     case "neutral":
     default:
       return [
-        "Make the text natural, fluid, clean, and easy to read.",
-        "Do not make it notably more formal.",
-        "Do not over-polish it."
+        "Correct only spelling, grammar, punctuation, accents, spacing, and awkward phrasing.",
+        "Make the text slightly cleaner and more natural, but stay extremely close to the original wording.",
+        "Do not change the tone, intent, meaning, structure, level of formality, emotion, humor, directness, or personality.",
+        "Do not make it more corporate, more polite, more persuasive, or more elaborate.",
+        "Do not add, remove, soften, intensify, summarize, or reinterpret anything."
       ].join(" ");
   }
 }
@@ -182,6 +189,10 @@ function buildSystemPrompt(tone = "neutral", lang = "auto") {
     "- If something is unclear, keep it close to the original.",
     "- Keep the user's natural style when possible.",
     "- Keep roughness, directness, humor, urgency, or informality when present, unless the selected tone clearly requires softening.",
+	"- In neutral mode, perform correction only. Do not rewrite creatively.",
+	"- In professional mode, improve for business communication without changing meaning.",
+	"- In conversion mode, improve persuasion without inventing or exaggerating.",
+	"- When in doubt, choose the smallest possible change.",
     "",
     `Selected tone: ${tone}`,
     `Target language: ${lang || "auto"}`,
