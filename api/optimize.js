@@ -36,15 +36,6 @@ function setCors(res) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
 
-function sanitizeTone(tone) {
-  const value = String(tone || "").toLowerCase().trim();
-
-  // Compat légère avec l'ancien nom
-  if (value === "persuasive") return "conversion";
-
-  return ALLOWED_TONES.has(value) ? value : "neutral";
-}
-
 function sanitizeLang(lang) {
   const value = String(lang || "auto").trim();
   return value || "auto";
