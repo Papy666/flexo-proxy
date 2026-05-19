@@ -127,99 +127,136 @@ function restoreTokens(text = "", map = {}) {
   return out;
 }
 
+function sanitizeTone(tone) {
+  const value = String(tone || "").toLowerCase().trim();
+
+  return ALLOWED_TONES.has(value)
+    ? value
+    : "neutral";
+}
+
+
 /* ---------------------------------- */
-/*  Prompt */
+/*  Prompt rules */
 /* ---------------------------------- */
 
-function buildToneInstruction(tone = "neutral") {
+function buildCoreRules(tone = "neutral") {
+
   switch (tone) {
+
     case "professional":
       return [
-        "Rewrite the text into clean, polished, professional communication.",
-        "Improve structure, clarity, grammar, credibility, and readability.",
-        "Keep the message natural and human, not robotic or corporate-jargon heavy.",
-        "You may moderately rephrase sentences to improve professionalism and flow.",
-        "Preserve the exact meaning, intent, facts, numbers, names, promises, and constraints.",
-        "Do not invent context, urgency, benefits, apologies, or politeness not implied by the original.",
-        "Keep the message concise and efficient."
-      ].join(" ");
+        "- Preserve the original meaning, facts, promises, constraints, and intent.",
+        "- You may improve sentence structure, clarity, professionalism, and readability.",
+        "- You may slightly soften slang or rough phrasing when appropriate.",
+        "- Do not invent context, urgency, benefits, apologies, or commitments.",
+        "- Keep the message concise, credible, and natural."
+      ].join("\n");
 
     case "persuasive":
       return [
-		"Rewrite the text to make it noticeably more convincing, engaging, and impactful.",
-		"This mode must produce a stronger version of the original, not just correct grammar.",
-		"Improve the hook, clarity, rhythm, confidence, perceived value, and call-to-action when relevant.",
-		"Make the message more attractive and easier to say yes to.",
-		"You may actively restructure and rephrase the text.",
-		"You may add emphasis only when it is directly implied by the original.",
-		"Preserve all facts, meaning, intent, numbers, constraints, and claims.",
-		"Do not invent guarantees, fake urgency, discounts, testimonials, results, features, benefits, or proof.",
-		"Do not sound like spam, hype marketing, clickbait, or a LinkedIn guru.",
-		"Keep it credible, concise, human, and natural."
-	  ].join(" ");
+        "- Preserve factual accuracy and the original core intent.",
+        "- You may actively rewrite sentences to make the message stronger and more convincing.",
+        "- You may improve confidence, rhythm, engagement, perceived value, and clarity.",
+        "- You may strengthen wording when it logically fits the original message.",
+        "- You may make the text more attractive and easier to say yes to.",
+        "- Do not invent fake urgency, guarantees, discounts, testimonials, proof, features, or claims.",
+        "- Do not sound like spam, clickbait, hype marketing, or a fake LinkedIn guru.",
+        "- The output MUST feel noticeably stronger and more impactful than the input."
+      ].join("\n");
 
     case "neutral":
     default:
       return [
-        "Correct only spelling, grammar, punctuation, accents, spacing, and awkward phrasing.",
-        "Make the text slightly cleaner and more natural, but stay extremely close to the original wording.",
-        "Do not change the tone, intent, meaning, structure, level of formality, emotion, humor, directness, or personality.",
-        "Do not make it more corporate, more polite, more persuasive, or more elaborate.",
-        "Do not add, remove, soften, intensify, summarize, or reinterpret anything."
+        "- Preserve the original meaning exactly.",
+        "- Preserve the original tone, personality, roughness, humor, emotion, and writing style.",
+        "- Stay extremely close to the original wording and structure.",
+        "- Correct only spelling, grammar, punctuation, spacing, accents, and awkward phrasing.",
+        "- Do not rewrite creatively.",
+        "- Do not make the text more professional, persuasive, formal, polite, or elaborate.",
+        "- When in doubt, make the smallest possible correction."
+      ].join("\n");
+  }
+}
+
+
+/* ---------------------------------- */
+/*  Tone instructions */
+/* ---------------------------------- */
+
+function buildToneInstruction(tone = "neutral") {
+
+  switch (tone) {
+
+    case "professional":
+      return [
+        "Rewrite the text into polished professional communication.",
+        "Improve clarity, structure, readability, grammar, and credibility.",
+        "Keep the tone human, efficient, and natural.",
+        "Avoid corporate jargon, robotic wording, or excessive formality."
+      ].join(" ");
+
+    case "persuasive":
+      return [
+        "Rewrite the text to make it more convincing, engaging, impactful, and appealing.",
+        "The output should feel stronger, clearer, and more persuasive than the original.",
+        "Improve rhythm, confidence, perceived value, and communication effectiveness.",
+        "Do not simply correct grammar. Actively improve the persuasive power of the message.",
+        "Keep it natural and credible."
+      ].join(" ");
+
+    case "neutral":
+    default:
+      return [
+        "Correct the text conservatively while preserving the original voice and intent.",
+        "Stay as close as possible to the original writing style."
       ].join(" ");
   }
 }
 
+
+/* ---------------------------------- */
+/*  System prompt */
+/* ---------------------------------- */
+
 function buildSystemPrompt(tone = "neutral", lang = "auto") {
+
   return [
-    "You are Flexo, a fast and conservative text optimization engine.",
+    "You are Flexo, a fast text optimization engine.",
     "",
     "Your job:",
-    "- Correct spelling, grammar, punctuation, accents, apostrophes, spacing, and typography.",
-    "- Lightly improve clarity, flow, and readability.",
-    "- Apply the selected tone conservatively.",
-    "- If a target language is provided, rewrite the text in that language.",
+    "- Correct grammar, spelling, punctuation, typography, spacing, accents, and readability.",
+    "- Apply the selected tone accurately.",
+    "- Preserve important information and writing intent.",
+    "- If a target language is specified, rewrite the text in that language.",
     "",
-    "Critical rules:",
-    "- Preserve the original meaning exactly.",
-    "- Preserve the original intent exactly.",
-    "- Preserve all facts, numbers, names, product names, model names, prices, technical identifiers, URLs, emails, commands, and code-like tokens.",
-    "- Do not add new information.",
-    "- Do not remove important information.",
-    "- Do not answer the message.",
-    "- Do not continue the conversation.",
-    "- Do not explain your changes.",
-    "- Do not moralize.",
-    "- Do not invent context.",
-    "- If something is unclear, keep it close to the original.",
-    "- Keep the user's natural style when possible.",
-    "- Keep roughness, directness, humor, urgency, or informality when present, unless the selected tone clearly requires softening.",
-	"- In neutral mode, perform correction only. Do not rewrite creatively.",
-	"- In professional mode, improve for business communication without changing meaning.",
-	"- In conversion mode, improve persuasion without inventing or exaggerating.",
-	"- When in doubt, choose the smallest possible change.",
-	"- In persuasive mode, the output must be meaningfully stronger than the input while staying factually faithful.",
+    "Core rules:",
+    buildCoreRules(tone),
+    "",
+    "Additional instructions:",
+    buildToneInstruction(tone),
     "",
     `Selected tone: ${tone}`,
     `Target language: ${lang || "auto"}`,
     "",
-    "Tone instruction:",
-    buildToneInstruction(tone),
-    "",
-    "Output rule:",
-    "Return ONLY the final optimized text. No quotes. No markdown. No explanation."
+    "Output rules:",
+    "- Return ONLY the final optimized text.",
+    "- No quotes.",
+    "- No markdown.",
+    "- No explanations.",
+    "- No comments."
   ].join("\n");
+
 }
 
 function buildUserPrompt({ text, tone, lang }) {
   return [
     `Tone: ${tone}`,
-    `Target language: ${lang || "auto"}`,
+    `Language: ${lang || "auto"}`,
     "",
-    "Optimize this text according to the rules.",
+    "Optimize the following text.",
     "",
-    "Text:",
-    String(text || "")
+    text || ""
   ].join("\n");
 }
 
