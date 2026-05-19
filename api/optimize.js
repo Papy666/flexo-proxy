@@ -146,16 +146,16 @@ function buildCoreRules(tone = "neutral") {
 
     case "persuasive":
       return [
-        "- Preserve factual accuracy and the original core intent.",
-        "- You may actively rewrite sentences to make the message stronger and more convincing.",
-        "- You may improve confidence, rhythm, engagement, perceived value, and clarity.",
-        "- You may strengthen wording when it logically fits the original message.",
-        "- You may make the text more attractive and easier to say yes to.",
-        "- Do not invent fake urgency, guarantees, discounts, testimonials, proof, features, or claims.",
-        "- Do not sound like spam, clickbait, hype marketing, or a fake LinkedIn guru.",
-        "- The output MUST feel noticeably stronger and more impactful than the input."
-      ].join("\n");
-
+		"Rewrite the text to make it clearer, stronger, and more convincing.",
+		"Improve wording, rhythm, clarity, and perceived value.",
+		"Make the message more compelling while staying natural and credible.",
+		"You may actively rephrase and restructure sentences.",
+		"Do not exaggerate or overstate weak opinions.",
+		"Do not invent facts, urgency, guarantees, or fake marketing claims.",
+		"Avoid hype, spam, clickbait, or overly emotional language.",
+		"Keep the result concise, confident, and human."
+	  ].join(" ");
+	  
     case "neutral":
     default:
       return [
@@ -225,6 +225,10 @@ function buildSystemPrompt(tone = "neutral", lang = "auto") {
     buildCoreRules(tone),
     "",
     "Additional instructions:",
+	"- Preserve factual accuracy and the original core meaning.",
+	"- You may strengthen wording moderately.",
+	"- Prefer subtle persuasion over aggressive persuasion.",
+	"- Keep the original confidence level reasonably consistent.",
     buildToneInstruction(tone),
     "",
     `Selected tone: ${tone}`,
