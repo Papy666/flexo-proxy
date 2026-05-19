@@ -146,14 +146,17 @@ function buildToneInstruction(tone = "neutral") {
 
     case "persuasive":
       return [
-        "Rewrite the text to make it clearer, more convincing, and more impactful.",
-        "Improve clarity, rhythm, confidence, engagement, and perceived value.",
-        "You may rephrase actively to strengthen the message and make it more compelling.",
-        "Preserve all original facts, meaning, constraints, numbers, and intent.",
-        "Do not invent guarantees, fake urgency, discounts, testimonials, results, or claims.",
-        "Do not sound like spam, hype marketing, or clickbait.",
-        "Keep the tone credible, human, and natural."
-      ].join(" ");
+		"Rewrite the text to make it noticeably more convincing, engaging, and impactful.",
+		"This mode must produce a stronger version of the original, not just correct grammar.",
+		"Improve the hook, clarity, rhythm, confidence, perceived value, and call-to-action when relevant.",
+		"Make the message more attractive and easier to say yes to.",
+		"You may actively restructure and rephrase the text.",
+		"You may add emphasis only when it is directly implied by the original.",
+		"Preserve all facts, meaning, intent, numbers, constraints, and claims.",
+		"Do not invent guarantees, fake urgency, discounts, testimonials, results, features, benefits, or proof.",
+		"Do not sound like spam, hype marketing, clickbait, or a LinkedIn guru.",
+		"Keep it credible, concise, human, and natural."
+	  ].join(" ");
 
     case "neutral":
     default:
@@ -195,6 +198,7 @@ function buildSystemPrompt(tone = "neutral", lang = "auto") {
 	"- In professional mode, improve for business communication without changing meaning.",
 	"- In conversion mode, improve persuasion without inventing or exaggerating.",
 	"- When in doubt, choose the smallest possible change.",
+	"- In persuasive mode, the output must be meaningfully stronger than the input while staying factually faithful.",
     "",
     `Selected tone: ${tone}`,
     `Target language: ${lang || "auto"}`,
