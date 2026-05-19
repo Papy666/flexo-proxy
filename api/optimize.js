@@ -23,7 +23,7 @@ const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
 const ALLOWED_TONES = new Set([
   "neutral",
   "professional",
-  "conversion"
+  "persuasive"
 ]);
 
 /* ---------------------------------- */
@@ -135,22 +135,24 @@ function buildToneInstruction(tone = "neutral") {
   switch (tone) {
     case "professional":
       return [
-        "Rewrite as a polished professional message suitable for email or business communication.",
-        "Improve structure, clarity, politeness, credibility, and readability.",
-        "You may slightly rephrase sentences to make them smoother and more professional.",
-        "Do not change the meaning, facts, intent, level of commitment, numbers, names, dates, prices, technical terms, or constraints.",
-        "Do not invent context, promises, urgency, benefits, or missing details.",
-        "Keep the message concise and natural."
+        "Rewrite the text into clean, polished, professional communication.",
+        "Improve structure, clarity, grammar, credibility, and readability.",
+        "Keep the message natural and human, not robotic or corporate-jargon heavy.",
+        "You may moderately rephrase sentences to improve professionalism and flow.",
+        "Preserve the exact meaning, intent, facts, numbers, names, promises, and constraints.",
+        "Do not invent context, urgency, benefits, apologies, or politeness not implied by the original.",
+        "Keep the message concise and efficient."
       ].join(" ");
 
-    case "conversion":
+    case "persuasive":
       return [
-        "Rewrite to make the text clearer, more persuasive, and more conversion-oriented.",
-        "Improve the hook, perceived value, clarity of the offer/request, and call-to-action when appropriate.",
-        "You may rephrase more actively than in neutral or professional mode.",
-        "Do not invent facts, guarantees, urgency, discounts, scarcity, testimonials, results, benefits, or promises.",
-        "Do not exaggerate beyond the original meaning.",
-        "Preserve the original intent and factual content exactly."
+        "Rewrite the text to make it clearer, more convincing, and more impactful.",
+        "Improve clarity, rhythm, confidence, engagement, and perceived value.",
+        "You may rephrase actively to strengthen the message and make it more compelling.",
+        "Preserve all original facts, meaning, constraints, numbers, and intent.",
+        "Do not invent guarantees, fake urgency, discounts, testimonials, results, or claims.",
+        "Do not sound like spam, hype marketing, or clickbait.",
+        "Keep the tone credible, human, and natural."
       ].join(" ");
 
     case "neutral":
