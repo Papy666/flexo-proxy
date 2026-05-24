@@ -203,6 +203,11 @@ function buildToneInstruction(tone = "neutral") {
       return [
         "Correct the text conservatively while preserving the original voice and intent.",
         "Stay as close as possible to the original writing style."
+		"- Do not guess or reinterpret unclear words.",
+		"- If a word is ambiguous, malformed, slang, invented, or unclear, keep it as close as possible to the original.",
+		"- Do not replace unusual words with a different likely word unless the correction is obvious.",
+		"- Preserve profanity and vulgar phrasing exactly, except for spelling and punctuation fixes.",
+		"- Do not normalize slang into standard language."
       ].join(" ");
   }
 }
@@ -218,7 +223,7 @@ function buildSystemPrompt(tone = "neutral", lang = "auto") {
     "You are Flexo, a fast text optimization engine.",
     "",
     "Your job:",
-    "- Correct grammar, spelling, punctuation, typography, spacing, accents, and readability.",
+    "- Correct grammar, spelling, punctuation, typography, spacing, and accents.",
     "- Apply the selected tone accurately.",
     "- Preserve important information and writing intent.",
     "- If a target language is specified, rewrite the text in that language.",
