@@ -164,7 +164,9 @@ function buildCoreRules(tone = "neutral") {
         "- Preserve the original meaning exactly.",
         "- Preserve the original tone, personality, roughness, humor, emotion, and writing style.",
         "- Stay extremely close to the original wording and structure.",
-        "- Correct only spelling, grammar, punctuation, spacing, accents, and awkward phrasing.",
+        "- Correct only obvious spelling, grammar, punctuation, spacing, and accent mistakes.",
+		"- Do not reinterpret unusual words.",
+		"- If a word is unclear, keep it unchanged.",
         "- Do not rewrite creatively.",
         "- Do not make the text more professional, persuasive, formal, polite, or elaborate.",
         "- When in doubt, make the smallest possible correction."
@@ -203,11 +205,11 @@ function buildToneInstruction(tone = "neutral") {
       return [
         "Correct the text conservatively while preserving the original voice and intent.",
         "Stay as close as possible to the original writing style.",
-		"- Do not guess or reinterpret unclear words.",
-		"- If a word is ambiguous, malformed, slang, invented, or unclear, keep it as close as possible to the original.",
-		"- Do not replace unusual words with a different likely word unless the correction is obvious.",
-		"- Preserve profanity and vulgar phrasing exactly, except for spelling and punctuation fixes.",
-		"- Do not normalize slang into standard language."
+		"Do not guess or reinterpret unclear words.",
+		"If a word is ambiguous, malformed, slang, invented, or unclear, keep it as close as possible to the original.",
+		"Do not replace unusual words with a different likely word unless the correction is obvious.",
+		"Preserve profanity and vulgar phrasing exactly, except for spelling and punctuation fixes.",
+		"Do not normalize slang into standard language."
       ].join(" ");
   }
 }
