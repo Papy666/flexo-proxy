@@ -202,7 +202,7 @@ function buildToneInstruction(tone = "neutral") {
     default:
       return [
         "Correct the text conservatively while preserving the original voice and intent.",
-        "Stay as close as possible to the original writing style."
+        "Stay as close as possible to the original writing style.",
 		"- Do not guess or reinterpret unclear words.",
 		"- If a word is ambiguous, malformed, slang, invented, or unclear, keep it as close as possible to the original.",
 		"- Do not replace unusual words with a different likely word unless the correction is obvious.",
