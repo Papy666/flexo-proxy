@@ -112,7 +112,9 @@ function restoreTokens(text = "", map = {}) {
   let out = String(text || "");
 
   for (const key in map) {
+    const raw = key.replaceAll("_", "");
     out = out.replaceAll(key, map[key]);
+    out = out.replaceAll(raw, map[key]);
   }
 
   return out;
@@ -226,8 +228,6 @@ function buildSystemPrompt(tone = "neutral", lang = "auto") {
     "",
     "Additional instructions:",
 	"- Preserve factual accuracy and the original core meaning.",
-	"- You may strengthen wording moderately.",
-	"- Prefer subtle persuasion over aggressive persuasion.",
 	"- Keep the original confidence level reasonably consistent.",
     buildToneInstruction(tone),
     "",
